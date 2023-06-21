@@ -16,7 +16,7 @@ class Date_tools:
 
     def number_of_leap_years(self):
         count = 0
-        for year in range(self.first_date, self.second_date + 1):
+        for year in range(self.first_date.year, self.second_date.year + 1):
             if calendar.isleap(year):
                 count += 1
         print(f"number of leap years: {count}")
@@ -26,9 +26,9 @@ class Date_tools:
         pass
 
 
-    def convert_to_hijri(self):
-        j_first_date = jdatetime.datetime.fromgregorian(self.first_date)
-        j_second_date = jdatetime.datetime.fromgregorian(self.second_date)
+    def convert_to_jalali(self):
+        j_first_date = jdatetime.datetime.fromgregorian(datetime=self.first_date)
+        j_second_date = jdatetime.datetime.fromgregorian(datetime=self.second_date)
         print(f"first date in Hijri: {j_first_date}")
         print(f"second date in Hijri: {j_second_date}")
 
@@ -44,7 +44,11 @@ def main():
     two_times = Date_tools(first_date, second_date)
     two_times.time_difference_in_seconds()
     two_times.number_of_leap_years()
-    two_times.convert_to_hijri
+    two_times.convert_to_jalali()
 
 if __name__ == "__main__":
     main()
+
+
+# 1997-01-10 12:10:07
+# 2023-06-20 11:20:25
