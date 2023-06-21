@@ -27,10 +27,10 @@ class Date_tools:
 
 
     def convert_to_jalali(self):
-        j_first_date = jdatetime.datetime.fromgregorian(datetime=self.first_date)
-        j_second_date = jdatetime.datetime.fromgregorian(datetime=self.second_date)
-        print(f"first date in Hijri: {j_first_date}")
-        print(f"second date in Hijri: {j_second_date}")
+        j_first_date = jdatetime.datetime.fromgregorian(datetime=self.first_date.date())
+        j_second_date = jdatetime.datetime.fromgregorian(datetime=self.second_date.date())
+        print(f"first date in Jalali: {j_first_date.strftime('%Y/%m/%d')}")
+        print(f"second date in Jalali: {j_second_date.strftime('%Y/%m/%d')}")
 
 
 
@@ -50,5 +50,4 @@ if __name__ == "__main__":
     main()
 
 
-# 1997-01-10 12:10:07
-# 2023-06-20 11:20:25
+# for test: 1997-01-9 4:10:07 | 2023-06-20 11:20:25
