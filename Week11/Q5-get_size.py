@@ -44,11 +44,3 @@ elif args.f:
     print(convert_B_to_KB(get_path_size(args.f)))
 
 
-
-
-
-# path for test in my laptop:
-# & "C:/Program Files/python.exe" Q5-get_size.py -d E:\Python\Maktab_Sharif\W11\HW\HW-98\Week11
-# & "C:/Program Files/python.exe" Q5-get_size.py -d E:\Python\Maktab_Sharif\W11\HW\HW-98\Week11 -F py
-# & "C:/Program Files/python.exe" Q5-get_size.py -d E:\Python\Maktab_Sharif\W11\HW\HW-98\Week11\Q5-get_size.py
-# & "C:/Program Files/python.exe" Q5-get_size.py -d E:\Python\Maktab_Sharif\W11\HW\HW-98\Week11\Q5-get_size.py -F py
