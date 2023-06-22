@@ -30,7 +30,7 @@ def convert_B_to_KB(size):
 parser = argparse.ArgumentParser()
 group = parser.add_mutually_exclusive_group()
 group.add_argument('-d', type=pathlib.Path)
-group.add_argument('-f')
+group.add_argument('-f', type=pathlib.Path)
 parser.add_argument('-F', type=str)
 args = parser.parse_args()
 
