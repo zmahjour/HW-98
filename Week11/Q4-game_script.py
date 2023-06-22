@@ -17,9 +17,9 @@ for i in range(args.g):
     guess = int(input("What is your guess? "))
 
     if guess < correct_num:
-        print("Enter Higher Number")
+        print("Your number is small")
     elif guess > correct_num:
-        print("Enter Lower Number")
+        print("Your number is large")
     else:
         print("Congratulations; you won!")
         break
