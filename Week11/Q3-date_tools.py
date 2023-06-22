@@ -23,7 +23,18 @@ class Date_tools:
 
 
     def number_of_daylight_saving(self):
-        pass
+        j_first_date = jdatetime.datetime.fromgregorian(datetime=self.first_date.date())
+        j_second_date = jdatetime.datetime.fromgregorian(datetime=self.second_date.date())
+        d_s = (j_second_date.year - j_first_date.year - 1) * 2
+
+        if j_first_date.month < 7:
+            d_s += 1
+        if j_second_date.month > 6:
+            d_s += 2
+        else:
+            d_s += 1
+
+        print(f"number of daylight saving: {d_s}")
 
 
     def convert_to_jalali(self):
@@ -44,6 +55,7 @@ def main():
     two_times = Date_tools(first_date, second_date)
     two_times.time_difference_in_seconds()
     two_times.number_of_leap_years()
+    two_times.number_of_daylight_saving()
     two_times.convert_to_jalali()
 
 if __name__ == "__main__":
