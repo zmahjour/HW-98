@@ -4,46 +4,21 @@ from typing import List, Tuple
 
 class WeatherDatabase:
     @staticmethod
-    def connect_to_db():
+    def connect_to_db() -> connection:
         conn = psycopg2.connect(
-        database="weather",
-        user="postgres",
-        password="13751375",
-        port=5433
-    )
+            database="weather", user="postgres", password="13751375", port=5433
+        )
+        return conn
 
     @classmethod
     def save_request_data(cls, city_name: str, request_time: str) -> None:
         conn = WeatherDatabase.connect_to_db()
         with conn.cursor() as cur:
-            cur.execute(f"INSERT INTO ")
-
-# Define the INSERT statement
-insert_query = "INSERT INTO your_table (column1, column2, column3) VALUES (%s, %s, %s)"
-
-# Define the values to be inserted
-values = ("value1", "value2", "value3")
-
-# Execute the INSERT statement
-cur.execute(insert_query, values)
-
-# Commit the transaction
-conn.commit()
-
-# Close the cursor and connection
-cur.close()
-conn.close()
-        """
-        Save request data for a city to the database.
-
-        Args:
-        - city_name (str): The name of the city to save request data for.
-        - request_time (str): The time the request was made, in ISO format.
-
-        Returns:
-        - None
-        """
-        pass
+            cur.execute(
+                f"INSERT INTO request (city_name, request_time) VALUES ({city_name}, {request_time})"
+            )
+            conn.commit()
+            conn.close()
 
     def save_response_data(self, city_name: str, response_data: dict) -> None:
         """
