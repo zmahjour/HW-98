@@ -1,14 +1,38 @@
+import psycopg2
 from typing import List, Tuple
 
 
 class WeatherDatabase:
-    def __init__(self):
-        """
-        Initialize a new WeatherDatabase instance.
-        """
-        pass
+    @staticmethod
+    def connect_to_db():
+        conn = psycopg2.connect(
+        database="weather",
+        user="postgres",
+        password="13751375",
+        port=5433
+    )
 
-    def save_request_data(self, city_name: str, request_time: str) -> None:
+    @classmethod
+    def save_request_data(cls, city_name: str, request_time: str) -> None:
+        conn = WeatherDatabase.connect_to_db()
+        with conn.cursor() as cur:
+            cur.execute(f"INSERT INTO ")
+
+# Define the INSERT statement
+insert_query = "INSERT INTO your_table (column1, column2, column3) VALUES (%s, %s, %s)"
+
+# Define the values to be inserted
+values = ("value1", "value2", "value3")
+
+# Execute the INSERT statement
+cur.execute(insert_query, values)
+
+# Commit the transaction
+conn.commit()
+
+# Close the cursor and connection
+cur.close()
+conn.close()
         """
         Save request data for a city to the database.
 
