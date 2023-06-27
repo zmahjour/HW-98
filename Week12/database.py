@@ -1,4 +1,3 @@
-
 from typing import List, Tuple
 
 
@@ -70,4 +69,3 @@ class WeatherDatabase:
         - List[Tuple[str, int]]: A list of tuples containing the name of the city and the number of requests made for that city.
         """
         pass
-
