@@ -4,15 +4,21 @@ from typing import List, Tuple, Any
 
 class WeatherDatabase:
     @staticmethod
-    def connect_to_db():
+    def connect_to_db(
+        database="weather", user="postgres", password="13751375", port=5433
+    ):
         conn = psycopg2.connect(
-            database="weather", user="postgres", password="13751375", port=5433
+            database=database, user=user, password=password, port=port
         )
         return conn
 
     @classmethod
-    def create_request_table(cls) -> None:
-        conn = cls.connect_to_db()
+    def create_request_table(
+        cls, database="weather", user="postgres", password="13751375", port=5433
+    ) -> None:
+        conn = cls.connect_to_db(
+            database=database, user=user, password=password, port=port
+        )
         with conn.cursor() as cur:
             cur.execute(
                 """
@@ -27,8 +33,12 @@ class WeatherDatabase:
         conn.close()
 
     @classmethod
-    def create_response_table(cls) -> None:
-        conn = cls.connect_to_db()
+    def create_response_table(
+        cls, database="weather", user="postgres", password="13751375", port=5433
+    ) -> None:
+        conn = cls.connect_to_db(
+            database=database, user=user, password=password, port=port
+        )
         with conn.cursor() as cur:
             cur.execute(
                 """
@@ -47,8 +57,17 @@ class WeatherDatabase:
         conn.close()
 
     @classmethod
-    def save_request_data(cls, city_name: str) -> None:
-        conn = cls.connect_to_db()
+    def save_request_data(
+        cls,
+        city_name: str,
+        database="weather",
+        user="postgres",
+        password="13751375",
+        port=5433,
+    ) -> None:
+        conn = cls.connect_to_db(
+            database=database, user=user, password=password, port=port
+        )
         with conn.cursor() as cur:
             cur.execute(f"INSERT INTO request (city_name) VALUES ('{city_name}')")
             conn.commit()
@@ -56,10 +75,21 @@ class WeatherDatabase:
 
     @classmethod
     def save_response_data(
-        cls, request_id, status_code, temperature, feels_like, last_updated
+        cls,
+        request_id,
+        status_code,
+        temperature,
+        feels_like,
+        last_updated,
+        database="weather",
+        user="postgres",
+        password="13751375",
+        port=5433,
     ) -> None:
         values = (request_id, status_code, temperature, feels_like, last_updated)
-        conn = cls.connect_to_db()
+        conn = cls.connect_to_db(
+            database=database, user=user, password=password, port=port
+        )
         with conn.cursor() as cur:
             cur.execute(
                 "INSERT INTO response (request_id, status_code, temperature, feels_like, last_updated) VALUES (%s, %s, %s, %s, %s)",
@@ -69,8 +99,12 @@ class WeatherDatabase:
         conn.close()
 
     @classmethod
-    def get_request_id(cls) -> int:
-        conn = cls.connect_to_db()
+    def get_request_id(
+        cls, database="weather", user="postgres", password="13751375", port=5433
+    ) -> int:
+        conn = cls.connect_to_db(
+            database=database, user=user, password=password, port=port
+        )
         with conn.cursor() as cur:
             cur.execute(
                 f"SELECT request_id FROM request ORDER BY request_id DESC LIMIT 1"
@@ -80,8 +114,12 @@ class WeatherDatabase:
         return row[0]
 
     @classmethod
-    def get_request_count(cls) -> int:
-        conn = cls.connect_to_db()
+    def get_request_count(
+        cls, database="weather", user="postgres", password="13751375", port=5433
+    ) -> int:
+        conn = cls.connect_to_db(
+            database=database, user=user, password=password, port=port
+        )
         with conn.cursor() as cur:
             cur.execute(f"SELECT COUNT(*) FROM request")
             row = cur.fetchall()
@@ -89,8 +127,12 @@ class WeatherDatabase:
         return row[0]
 
     @classmethod
-    def get_successful_request_count(cls) -> int:
-        conn = cls.connect_to_db()
+    def get_successful_request_count(
+        cls, database="weather", user="postgres", password="13751375", port=5433
+    ) -> int:
+        conn = cls.connect_to_db(
+            database=database, user=user, password=password, port=port
+        )
         with conn.cursor() as cur:
             cur.execute(f"SELECT COUNT(*) FROM response WHERE status_code = 200")
             row = cur.fetchall()
@@ -98,8 +140,12 @@ class WeatherDatabase:
         return row[0]
 
     @classmethod
-    def get_last_hour_requests(cls) -> List[Tuple[str, str]]:
-        conn = cls.connect_to_db()
+    def get_last_hour_requests(
+        cls, database="weather", user="postgres", password="13751375", port=5433
+    ) -> List[Tuple[str, str]]:
+        conn = cls.connect_to_db(
+            database=database, user=user, password=password, port=port
+        )
         with conn.cursor() as cur:
             cur.execute(
                 f"SELECT city_name, request_time FROM request WHERE request_time >= CURRENT_TIMESTAMP - INTERVAL '1 hour'"
@@ -109,8 +155,12 @@ class WeatherDatabase:
         return rows
 
     @classmethod
-    def get_city_request_count(cls) -> List[Tuple[str, int]]:
-        conn = cls.connect_to_db()
+    def get_city_request_count(
+        cls, database="weather", user="postgres", password="13751375", port=5433
+    ) -> List[Tuple[str, int]]:
+        conn = cls.connect_to_db(
+            database=database, user=user, password=password, port=port
+        )
         with conn.cursor() as cur:
             cur.execute(
                 f"SELECT city_name, COUNT(*) AS number_of_requests FROM request GROUP BY city_name"
