@@ -1,5 +1,5 @@
 import unittest
-from database import WeatherDatabase
+from database import WeatherDatabase as db
 import psycopg2
 
 
@@ -31,7 +31,10 @@ class WeatherDatabseTest(unittest.TestCase):
         conn.close()
 
     def test_connect_to_db(self):
-        pass
+        conn = db.connect_to_db(
+            database="postgres", user="postgres", password="13751375", port=5433
+        )
+        self.assertIs(type(conn), psycopg2.extensions.connection)
 
     def test_create_request_table(self):
         pass
