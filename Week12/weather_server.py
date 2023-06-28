@@ -87,9 +87,14 @@ class WeatherServer(BaseHTTPRequestHandler):
         )
 
 
-server = HTTPServer((host, port), WeatherServer)
-print("Weather Server running")
+def main():
+    server = HTTPServer((host, port), WeatherServer)
+    print("Weather Server running")
 
-server.serve_forever()
-server.server_close()
-print("Server stopped")
+    server.serve_forever()
+    server.server_close()
+    print("Server stopped")
+
+
+if __name__ == "__main__":
+    main()
