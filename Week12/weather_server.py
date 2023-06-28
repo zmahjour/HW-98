@@ -4,6 +4,7 @@ import requests
 import datetime
 import json
 import urllib.parse
+from database import WeatherDatabase
 
 
 def get_response(city_name: str, API_key: str = "a2b998fddb840dbfc31ce7eca178d10e"):
@@ -25,11 +26,16 @@ def get_city_weather(city_name: str) -> Any:
         dt = time_convert(data["dt"])
         weather_data = {
             "temp": data["main"]["temp"],
-            "feels like": data["main"]["feels_like"],
-            "last updated time": dt,
+            "feels_like": data["main"]["feels_like"],
+            "last_updated_time": dt,
         }
-        return weather_data
-    return response.status_code
+    else:
+        weather_data = {
+            "temp": None,
+            "feels_like": None,
+            "last_updated_time": None,
+        }
+    return response, weather_data
 
 
 host = "127.0.0.1"
@@ -46,16 +52,18 @@ class WeatherServer(BaseHTTPRequestHandler):
 
     def do_GET(self):
         city_name = WeatherServer.parse(self.path)
-        weather_response = get_city_weather(city_name)
-        if type(weather_response) == dict:
+        WeatherDatabase.save_request_data(city_name)
+        request_id = WeatherDatabase.get_request_id()
+        response, weather_response = get_city_weather(city_name)
+        if response.status_code == 200:
             self.send_response(200)
             self.send_header("Content-type", "application/json")
             self.end_headers()
             weather_data = json.dumps(weather_response).encode("utf-8")
             self.wfile.write(weather_data)
 
-        elif weather_response == 404:
-            self.send_response(weather_response)
+        elif response.status_code == 404:
+            self.send_response(404)
             self.send_header("Content-type", "application/json")
             self.end_headers()
             res = json.dumps(f"No matching location found; {weather_response}").encode(
@@ -64,11 +72,19 @@ class WeatherServer(BaseHTTPRequestHandler):
             self.wfile.write(res)
 
         else:
-            self.send_response(weather_response)
+            self.send_response(response.status_code)
             self.send_header("Content-type", "application/json")
             self.end_headers()
             res = json.dumps(f"Something was wrong; {weather_response}").encode("utf-8")
             self.wfile.write(res)
+
+        WeatherDatabase.save_response_data(
+            request_id,
+            response.status_code,
+            weather_response["temp"],
+            weather_response["feels_like"],
+            weather_response["last_updated_time"],
+        )
 
 
 server = HTTPServer((host, port), WeatherServer)
