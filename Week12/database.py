@@ -1,14 +1,50 @@
 import psycopg2
-from typing import List, Tuple
+from typing import List, Tuple, Any
 
 
 class WeatherDatabase:
     @staticmethod
-    def connect_to_db() -> connection:
+    def connect_to_db() -> Any:
         conn = psycopg2.connect(
             database="weather", user="postgres", password="13751375", port=5433
         )
         return conn
+
+    @classmethod
+    def create_request_table(cls) -> None:
+        conn = WeatherDatabase.connect_to_db()
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                CREATE TABLE IF NOT EXISTS request (
+                request_id SERIAL PRIMARY KEY,
+                city_name VARCHAR(50),
+                request_time TIMESTAMP
+                )
+            """
+            )
+            conn.commit()
+            conn.close()
+
+    @classmethod
+    def create_response_table(cls) -> None:
+        conn = WeatherDatabase.connect_to_db()
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                CREATE TABLE IF NOT EXISTS response (
+                response_id SERIAL PRIMARY KEY,
+                request_id REFERENCES request (request_id),
+                response_time TIMESTAMP,
+                status_code INTEGER,
+                temperature REAL,
+                feels_like REAL,
+                last_updated VARCHAR(20)
+                )
+            """
+            )
+            conn.commit()
+            conn.close()
 
     @classmethod
     def save_request_data(cls, city_name: str, request_time: str) -> None:
