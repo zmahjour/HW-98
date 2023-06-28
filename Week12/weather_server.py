@@ -1,29 +1,35 @@
 from http.server import HTTPServer, BaseHTTPRequestHandler
+from typing import Any
 import requests
 import datetime
 import json
 import urllib.parse
 
 
-def get_city_weather(
-    city_name: str, API_key: str = "a2b998fddb840dbfc31ce7eca178d10e"
-) -> dict:
+def get_response(city_name: str, API_key: str = "a2b998fddb840dbfc31ce7eca178d10e"):
     url = f"https://api.openweathermap.org/data/2.5/weather?q={city_name}&appid={API_key}&units=metric"
     response = requests.get(url)
+    return response
+
+
+def time_convert(dt: int) -> str:
+    converted_dt = datetime.datetime.fromtimestamp(dt)
+    str_dt = converted_dt.strftime("%Y-%m-%d %H:%M:%S")
+    return str_dt
+
+
+def get_city_weather(city_name: str) -> Any:
+    response = get_response(city_name)
     if response.status_code == 200:
         data = response.json()
-        dt = datetime.datetime.fromtimestamp(data["dt"])
-        dt_str = dt.strftime("%Y-%m-%d %H:%M:%S")
-
+        dt = time_convert(data["dt"])
         weather_data = {
             "temp": data["main"]["temp"],
             "feels like": data["main"]["feels_like"],
-            "last updated time": dt_str,
+            "last updated time": dt,
         }
         return weather_data
-
-    else:
-        return {}
+    return response.status_code
 
 
 host = "127.0.0.1"
@@ -31,21 +37,38 @@ port = 8080
 
 
 class WeatherServer(BaseHTTPRequestHandler):
-    def do_GET(self):
-        parsed_url = urllib.parse.urlparse(self.path)
+    @staticmethod
+    def parse(url: str) -> str:
+        parsed_url = urllib.parse.urlparse(url)
         query_params = urllib.parse.parse_qs(parsed_url.query)
         city_name = query_params.get("city")[0]
-        print(city_name)
-        weather_data = get_city_weather(city_name)
-        if weather_data:
+        return city_name
+
+    def do_GET(self):
+        city_name = WeatherServer.parse(self.path)
+        weather_response = get_city_weather(city_name)
+        if type(weather_response) == dict:
             self.send_response(200)
             self.send_header("Content-type", "application/json")
             self.end_headers()
-            weather_data = json.dumps(weather_data).encode("utf-8")
+            weather_data = json.dumps(weather_response).encode("utf-8")
             self.wfile.write(weather_data)
 
+        elif weather_response == 404:
+            self.send_response(weather_response)
+            self.send_header("Content-type", "application/json")
+            self.end_headers()
+            res = json.dumps(f"No matching location found; {weather_response}").encode(
+                "utf-8"
+            )
+            self.wfile.write(res)
+
         else:
-            self.send_response(404)
+            self.send_response(weather_response)
+            self.send_header("Content-type", "application/json")
+            self.end_headers()
+            res = json.dumps(f"Something was wrong; {weather_response}").encode("utf-8")
+            self.wfile.write(res)
 
 
 server = HTTPServer((host, port), WeatherServer)
