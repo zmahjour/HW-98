@@ -66,16 +66,18 @@ class WeatherServer(BaseHTTPRequestHandler):
             self.send_response(404)
             self.send_header("Content-type", "application/json")
             self.end_headers()
-            res = json.dumps(f"No matching location found; {weather_response}").encode(
-                "utf-8"
-            )
+            res = json.dumps(
+                f"No matching location found | Error: {response.status_code}"
+            ).encode("utf-8")
             self.wfile.write(res)
 
         else:
             self.send_response(response.status_code)
             self.send_header("Content-type", "application/json")
             self.end_headers()
-            res = json.dumps(f"Something was wrong; {weather_response}").encode("utf-8")
+            res = json.dumps(
+                f"Something was wrong | Error: {response.status_code}"
+            ).encode("utf-8")
             self.wfile.write(res)
 
         WeatherDatabase.save_response_data(

@@ -111,7 +111,7 @@ class WeatherDatabase:
             )
             row = cur.fetchall()
         conn.close()
-        return row[0]
+        return row[0][0]
 
     @classmethod
     def get_request_count(
@@ -124,7 +124,8 @@ class WeatherDatabase:
             cur.execute(f"SELECT COUNT(*) FROM request")
             row = cur.fetchall()
         conn.close()
-        return row[0]
+        print(f"Total number of requests: {row[0][0]}")
+        return row[0][0]
 
     @classmethod
     def get_successful_request_count(
@@ -137,7 +138,7 @@ class WeatherDatabase:
             cur.execute(f"SELECT COUNT(*) FROM response WHERE status_code = 200")
             row = cur.fetchall()
         conn.close()
-        return row[0]
+        print(f"Total number of successful requests: {row[0][0]}")
 
     @classmethod
     def get_last_hour_requests(
@@ -152,7 +153,8 @@ class WeatherDatabase:
             )
             rows = cur.fetchall()
         conn.close()
-        return rows
+        for row in rows:
+            print(f"{row[0]}: {row[1]}")
 
     @classmethod
     def get_city_request_count(
@@ -163,10 +165,18 @@ class WeatherDatabase:
         )
         with conn.cursor() as cur:
             cur.execute(
-                f"SELECT city_name, COUNT(*) AS number_of_requests FROM request GROUP BY city_name"
+                """
+                SELECT LOWER(city_name) as city_name, COUNT(*) AS number_of_requests
+                FROM request
+                JOIN response ON response.request_id = request.request_id
+                WHERE status_code = 200
+                GROUP BY LOWER(city_name)
+            """
             )
             rows = cur.fetchall()
         conn.close()
+        for row in rows:
+            print(f"{row[0]}: {row[1]}")
         return rows
 
 
