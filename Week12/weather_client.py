@@ -13,4 +13,3 @@ def start_client():
         )
     else:
         print(response.json())
-
