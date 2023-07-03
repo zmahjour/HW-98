@@ -13,24 +13,22 @@ class TestModel(BaseModel):
         self.data = data
 
     def __str__(self) -> str:
-        return f'TestModel #{self._id}: {self.data}'
+        return f"TestModel #{self._id}: {self.data}"
 
     pass
 
 
 class FileManagerTest(TestCase):
-    config = {
-        'ROOT_PATH': 'test_data/'
-    }
+    config = {"ROOT_PATH": "test_data/"}
     manager = FileManager(config)
 
     def setUp(self) -> None:
-        root_files_path = self.config['ROOT_PATH']
+        root_files_path = self.config["ROOT_PATH"]
         if os.path.exists(root_files_path):
             shutil.rmtree(root_files_path)
 
     def tearDown(self) -> None:
-        root_files_path = self.config['ROOT_PATH']
+        root_files_path = self.config["ROOT_PATH"]
         if os.path.exists(root_files_path):
             shutil.rmtree(root_files_path)
 
@@ -38,13 +36,13 @@ class FileManagerTest(TestCase):
         test_model = TestModel("Test1")
 
         # Check if id is not set
-        self.assertIsNone(getattr(test_model, '_id', None))
+        self.assertIsNone(getattr(test_model, "_id", None))
 
         # Creating
         self.manager.create(test_model)
 
         # Check if id is set
-        self.assertIsNotNone(getattr(test_model, '_id', None))
+        self.assertIsNotNone(getattr(test_model, "_id", None))
 
     def test2_create_read(self):
         test_model = TestModel("Test2")
@@ -67,3 +65,12 @@ class FileManagerTest(TestCase):
 
         for m in models:
             self.assertIn(m, all_models)
+
+    def test4_update(self):
+        test_model_1 = TestModel("Test4")
+        test_model_2 = TestModel("Test5")
+        self.manager.create(test_model_1)
+        self.manager.update(test_model_1._id, test_model_2)
+        models = list(self.manager.read_all(TestModel))
+        self.assertIn(test_model_2, models)
+        self.assertNotIn(test_model_1, models)
