@@ -117,7 +117,12 @@ class FileManager(BaseManager):
             id (int): The ID of the model instance to delete.
             model_cls (type): The type of the model instance.
         """
-        pass
+        files = os.listdir(self.files_root + "/")
+        for f in files:
+            f_id = int(f.split("_")[-1].split(".")[0])
+            if f.startswith(model_cls.__name__) and f_id == id:
+                os.remove(f"{self.files_root}{f}")
+                break
 
     def read_all(self, model_cls: type = None) -> Generator:
         """
@@ -143,4 +148,7 @@ class FileManager(BaseManager):
         Args:
             model_cls (type): The type of the model instances to delete.
         """
-        pass
+        files = os.listdir(self.files_root + "/")
+        for f in files:
+            if f.startswith(model_cls.__name__):
+                os.remove(f"{self.files_root}{f}")
