@@ -5,7 +5,7 @@ import pickle
 
 
 class FileManager(BaseManager):
-    ROOT_PATH_CONFIG_KEY = "files/"
+    ROOT_PATH_CONFIG_KEY = "ROOT_PATH"
 
     def __init__(self, config: dict) -> None:
         """
@@ -86,7 +86,13 @@ class FileManager(BaseManager):
         Returns:
             BaseModel: The model instance.
         """
-        pass
+        files = os.listdir(self.files_root + "/")
+        for f in files:
+            f_id = int(f.split("_")[-1].split(".")[0])
+            if f.startswith(model_cls.__name__) and f_id == id:
+                with open(f, "rb") as file:
+                    obj = pickle.load(file)
+                return obj
 
     def update(self, m: BaseModel) -> None:
         """
