@@ -1,10 +1,11 @@
 from typing import Generator, Any
 from data_manager.base import BaseModel, BaseManager
 import os
+import pickle
 
 
 class FileManager(BaseManager):
-    ROOT_PATH_CONFIG_KEY = 'ROOT_PATH'
+    ROOT_PATH_CONFIG_KEY = "files/"
 
     def __init__(self, config: dict) -> None:
         """
@@ -38,11 +39,11 @@ class FileManager(BaseManager):
         Returns:
             int: The maximum ID for the specified model type.
         """
-        files = os.listdir(self.files_root + '/')
+        files = os.listdir(self.files_root + "/")
         ids = []
         for f in files:
             if f.startswith(model_type.__name__):
-                ids.append(int(f.split('_')[-1].split('.')[0]))
+                ids.append(int(f.split("_")[-1].split(".")[0]))
         return max(ids) + 1 if ids else 1
 
     def _get_file_path(self, _id, model_type: type) -> str:
@@ -56,7 +57,7 @@ class FileManager(BaseManager):
         Returns:
             str: The file path for the model instance.
         """
-        return f"{self.files_root}/{model_type.__name__}_{_id}.pkl".replace('//', '/')
+        return f"{self.files_root}/{model_type.__name__}_{_id}.pkl".replace("//", "/")
 
     def create(self, m: BaseModel) -> Any:
         """
@@ -69,7 +70,10 @@ class FileManager(BaseManager):
             Any: The path to the created file.
         """
         m._id = self._get_id(m.__class__)  # set ID!!!!
-        pass
+        file_path = self._get_file_path(m._id, m.__class__)
+        with open(file_path, "wb") as f:
+            pickle.dump(m, f)
+        return file_path
 
     def read(self, id: int, model_cls: type) -> BaseModel:
         """
