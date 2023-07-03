@@ -90,7 +90,7 @@ class FileManager(BaseManager):
         for f in files:
             f_id = int(f.split("_")[-1].split(".")[0])
             if f.startswith(model_cls.__name__) and f_id == id:
-                with open(f, "rb") as file:
+                with open(f"{self.files_root}{f}", "rb") as file:
                     obj = pickle.load(file)
                 return obj
 
