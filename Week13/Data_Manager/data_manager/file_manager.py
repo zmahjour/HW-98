@@ -123,7 +123,12 @@ class FileManager(BaseManager):
         Yields:
             BaseModel: The next model instance.
         """
-        pass
+        files = os.listdir(self.files_root + "/")
+        for f in files:
+            if f.startswith(model_cls.__name__):
+                with open(f"{self.files_root}{f}", "rb") as file:
+                    obj = pickle.load(file)
+                yield obj
 
     def truncate(self, model_cls: type) -> None:
         """
