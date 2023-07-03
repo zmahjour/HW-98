@@ -67,10 +67,23 @@ class FileManagerTest(TestCase):
             self.assertIn(m, all_models)
 
     def test4_update(self):
-        test_model_1 = TestModel("Test4")
-        test_model_2 = TestModel("Test5")
-        self.manager.create(test_model_1)
-        self.manager.update(test_model_1._id, test_model_2)
-        models = list(self.manager.read_all(TestModel))
-        self.assertIn(test_model_2, models)
-        self.assertNotIn(test_model_1, models)
+        test0_model = TestModel("Test40")
+        test1_model = TestModel("Test41")
+
+        self.manager.create(test0_model)
+        self.manager.update(test0_model._id, test1_model)
+
+        all_models = list(self.manager.read_all(TestModel))
+
+        self.assertIn(test1_model, all_models)
+        self.assertNotIn(test0_model, all_models)
+
+    def test5_delete(self):
+        test_model = TestModel("Test5")
+
+        self.manager.create(test_model)
+        self.manager.delete(test_model._id, TestModel)
+
+        all_models = list(self.manager.read_all(TestModel))
+
+        self.assertNotIn(test_model, all_models)
