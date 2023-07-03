@@ -94,14 +94,20 @@ class FileManager(BaseManager):
                     obj = pickle.load(file)
                 return obj
 
-    def update(self, m: BaseModel) -> None:
+    def update(self, id: int, m: BaseModel) -> None:
         """
         Updates an existing model instance.
 
         Args:
             m (BaseModel): The model instance to update.
         """
-        pass
+        files = os.listdir(self.files_root + "/")
+        for f in files:
+            f_id = int(f.split("_")[-1].split(".")[0])
+            if f.startswith(m.__class__.__name__) and f_id == id:
+                with open(f"{self.files_root}{f}", "wb") as file:
+                    pickle.dump(m, file)
+                break
 
     def delete(self, id: int, model_cls: type) -> None:
         """
