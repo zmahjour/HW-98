@@ -5,9 +5,15 @@ class Category(models.Model):
     name = models.CharField(max_length=50)
     description = models.TextField(blank=True)
 
+    def __str__(self):
+        return f"Name: {self.name}"
+
 
 class Tag(models.Model):
     label = models.CharField(max_length=20)
+
+    def __str__(self):
+        return f"Label: {self.label}"
 
 
 class Task(models.Model):
