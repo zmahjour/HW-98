@@ -1,8 +1,10 @@
 from django.shortcuts import render
+from task.models import Task
 
 
 def home(request):
-    return render(request, "home.html", context=tasks)
+    tasks = Task.objects.all().order_by("-id")[0:5]
+    return render(request, "home.html", {"tasks": tasks})
 
 
 def search(request):
