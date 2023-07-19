@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% if search %}
+        <h3>Search result for "{{ search }}"</h3>
+        <br/>
+        {% if results %}
+            {% for result in results %}
+                <p>{{ result }}</p>
+            {% endfor %}
+        {% else %}
+            <p>No results for "{{ search }}"</p>
+        {% endif %}
+    {% else %}
+        <h3>Search for nothing!</h3>
+    {% endif %}
+{% endblock content %}
