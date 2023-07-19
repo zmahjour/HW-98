@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import home, search, task_detail, all_tasks
+from task import views
 
 urlpatterns = [
     path("home/", views.home, neme="home"),
