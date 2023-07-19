@@ -21,6 +21,7 @@ class Task(models.Model):
     ]
     title = models.CharField(max_length=50)
     description = models.TextField(blank=True)
+    created = models.DateField(auto_now_add=True)
     due_date = models.DateField(blank=True)
     status = models.CharField(
         max_length=20, choices=STATUS_CHOICES, default=NOT_STARTED
@@ -28,4 +29,9 @@ class Task(models.Model):
     category = models.ForeignKey(
         Category, on_delete=models.SET_NULL, blank=True, null=True
     )
-    tags = models.ManyToManyField(Tag)
+    tags = models.ManyToManyField(Tag, blank=True)
+
+    def __str__(self):
+        return (
+            f"Task: {self.title} | Due date: {self.due_date} | Status: {self.status} "
+        )
