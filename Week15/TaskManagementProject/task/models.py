@@ -25,5 +25,7 @@ class Task(models.Model):
     status = models.CharField(
         max_length=20, choices=STATUS_CHOICES, default=NOT_STARTED
     )
-    category = models.ForeignKey(Category, on_delete=models.SET_NULL, blank=True)
+    category = models.ForeignKey(
+        Category, on_delete=models.SET_NULL, blank=True, null=True
+    )
     tags = models.ManyToManyField(Tag)
