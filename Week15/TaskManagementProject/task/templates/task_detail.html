@@ -1,5 +1,30 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    here is task detail
+    <section class="py-1 border-top border-bottom">
+        <div class="container px-5 my-5">
+            <div class="row gx-5 justify-content-center">
+
+                <div class="card text-center col-xl-3">
+                    <h4 class="card-header bg-white fw-bolder py-3">
+                        {{ task.title }}
+                    </h4>
+                    <div class="card-body">
+                        <p class="card-text fw-bolder py-3" style="font-size: 20px;">{{ task.description }}</p>
+                        <p class="card-text"><p class="fw-bolder">Created date:</p> {{ task.created }}</p>
+                        <p class="card-text"><p class="fw-bolder">Due date:</p> {{ task.due_date }}</p>
+                        <p class="card-text"><p class="fw-bolder">Category:</p> {{ task.category.name }}</p>
+                    </div>
+                    <div class="card-footer bg-white fw-bolder">
+                        {{ task.status }}
+                    </div>
+                </div>
+            </div>
+            
+            
+        </div>    
+    </section>
+    
 {% endblock content %}
+
+

@@ -1,7 +1,33 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    {% for task in tasks %}
-        <p><a href="{% url 'task_detail' task.pk %}">{{ task.title }}</p></a>
-    {% endfor %}
+    <section class="py-1 border-top border-bottom">
+        <div class="container px-5 my-5">
+            <div class="text-center mb-5">
+                <h2 class="fw-bolder">All tasks</h2>
+            </div>
+            <table class="table border-top">
+                <thead>
+                  <tr>
+                    <th scope="col" class="text-center">Title</th>
+                    <th scope="col" class="text-center">Created date</th>
+                    <th scope="col" class="text-center">Due date</th>
+                    <th scope="col" class="text-center">Status</th>
+                    <th scope="col" class="text-center">Details</th>
+                  </tr>
+                </thead>
+                {% for task in tasks %}
+                    <tbody>
+                        <tr>
+                            <th class="text-center">{{ task.title }}</th>
+                            <td class="text-center">{{ task.created }}</td>
+                            <td class="text-center">{{ task.due_date }}</td>
+                            <td class="text-center">{{ task.status }}</td>
+                            <td class="text-center"><a class="link-secondary link-underline-opacity-0 link-underline-opacity-50-hover" href="{% url 'task_detail' task.pk %}">View details</a></td>
+                        </tr>
+                    </tbody>
+                {% endfor %}
+            </table>
+        </div>    
+    </section>
 {% endblock content %}

@@ -1,7 +1,33 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    {% for task in tasks %}
-        <p><a href="{% url 'task_detail' task.pk %}">{{ task.title }}</p></a>
-    {% endfor %}
+    <section class="py-1 border-top border-bottom">
+        <div class="container px-5 my-5">
+            <div class="text-center mb-5">
+                <h2 class="fw-bolder">Last created tasks</h2>
+            </div>
+            <div class="row gx-5 justify-content-center">
+                {% for task in tasks %}
+                    <div class="col-lg-6 col-xl-3">
+                        <div class="card mb-5 mb-xl-0">
+                            <div class="card-body p-4">
+                                <div class="mb-3">
+                                    <h4><strong>{{ task.title }}</strong></h4>
+                                </div>
+                                <ul class="list-unstyled mb-4">
+                                    <li class="mb-2">
+                                        Status: {{ task.status }}
+                                    </li>
+                                    <li class="mb-2">
+                                        Due date: {{ task.due_date }}
+                                    </li>
+                                </ul>
+                                <div class="d-grid"><a class="btn btn-outline-secondary" href="{% url 'task_detail' task.pk %}">View Details</a></div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>    
+    </section>
 {% endblock content %}
